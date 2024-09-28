@@ -24,11 +24,16 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { useState } from "react"
+import { useGetUsersQuery } from "@/store/userData/users"
 
 
 const UsersList = () => {
 
     const [inputValue, setInputValue] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+    const { data: userData, error, isLoading } = useGetUsersQuery(searchValue);
+    const [userDetails, setUserDetails] = useState<number | null>(null);
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -43,10 +48,9 @@ const UsersList = () => {
 
     return (
         <>
-
             <Card className="w-100">
                 <CardHeader>
-                    <CardTitle>200</CardTitle>
+                    <CardTitle>{userData?.users?.length}</CardTitle>
                     <CardDescription>Total users found</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4">
@@ -64,67 +68,29 @@ const UsersList = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-
-                                <SheetTrigger asChild>
-                                    <TableRow className="cursor-pointer"
-                                        onClick={() => {
-
-                                        }}
-                                    >
-                                        <TableCell>Test First Name 1</TableCell>
-                                        <TableCell>Test Last Name 1</TableCell>
-                                        <TableCell>Test Email 1</TableCell>
-                                        <TableCell>Test Phone 1</TableCell>
-                                        <TableCell>Test Company Name 1</TableCell>
-                                    </TableRow>
-                                </SheetTrigger>
-                                <SheetTrigger asChild>
-                                    <TableRow className="cursor-pointer"
-                                        onClick={() => {
-
-                                        }}
-                                    >
-                                        <TableCell>Test First Name 2</TableCell>
-                                        <TableCell>Test Last Name 2</TableCell>
-                                        <TableCell>Test Email 2</TableCell>
-                                        <TableCell>Test Phone 2</TableCell>
-                                        <TableCell>Test Company Name 2</TableCell>
-                                    </TableRow>
-                                </SheetTrigger>
-                                <SheetTrigger asChild>
-                                    <TableRow className="cursor-pointer"
-                                        onClick={() => {
-
-                                        }}
-                                    >
-                                        <TableCell>Test First Name 3</TableCell>
-                                        <TableCell>Test Last Name 3</TableCell>
-                                        <TableCell>Test Email 3</TableCell>
-                                        <TableCell>Test Phone 3</TableCell>
-                                        <TableCell>Test Company Name 3</TableCell>
-                                    </TableRow>
-                                </SheetTrigger>
-                                <SheetTrigger asChild>
-                                    <TableRow className="cursor-pointer"
-                                        onClick={() => {
-
-                                        }}
-                                    >
-                                        <TableCell>Test First Name 4</TableCell>
-                                        <TableCell>Test Last Name 4</TableCell>
-                                        <TableCell>Test Email 4</TableCell>
-                                        <TableCell>Test Phone 4</TableCell>
-                                        <TableCell>Test Company Name 4</TableCell>
-                                    </TableRow>
-                                </SheetTrigger>
+                                {userData?.users?.map((obj: any, i: number) => {
+                                    return (
+                                        <SheetTrigger asChild>
+                                            <TableRow className="cursor-pointer"
+                                                onClick={() => setUserDetails(i)}
+                                            >
+                                                <TableCell>{obj?.firstName}</TableCell>
+                                                <TableCell>{obj?.lastName}</TableCell>
+                                                <TableCell>{obj?.email}</TableCell>
+                                                <TableCell>{obj?.phone}</TableCell>
+                                                <TableCell>{obj?.company?.name}</TableCell>
+                                            </TableRow>
+                                        </SheetTrigger>
+                                    )
+                                })}
                             </TableBody>
                         </Table>
 
                         <SheetContent>
                             <SheetHeader>
-                                <SheetTitle>Company Title</SheetTitle>
+                                <SheetTitle>User Details</SheetTitle>
                                 <SheetDescription>
-                                    Company Department
+                                    User details
                                 </SheetDescription>
                             </SheetHeader>
                         </SheetContent>
