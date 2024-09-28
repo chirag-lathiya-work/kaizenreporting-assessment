@@ -6,14 +6,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+
 import {
     Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
+
 import { Input } from "@/components/ui/input"
 
 import {
@@ -23,17 +21,19 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+
 import { useState } from "react"
-import { useGetUsersQuery } from "@/store/userData/users"
+
+import { useGetUsersQuery, useSearchUsersQuery } from "@/store/userData/users"
 import { LoadingHeader, LoadingTableRow } from "./Loading"
 import UserDetails from "./UserDetails"
+import { Button } from "@/components/ui/button"
 
 
 const UsersList = () => {
-
     const [inputValue, setInputValue] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const { data: userData, error, isLoading } = useGetUsersQuery(searchValue);
+    const { data: userData, error, isLoading } = searchValue ? useSearchUsersQuery(searchValue) : useGetUsersQuery("api");
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
 
@@ -41,12 +41,13 @@ const UsersList = () => {
         setInputValue(e.target.value);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            //TODO: Implement search feature
-            alert('handle search')
-        }
-    };
+    const handleSubmit = (e: React.SyntheticEvent) => {
+        e.preventDefault();
+        setSearchValue(inputValue);
+    }
+
+    if (error)
+        return <h1>Something went wrong</h1>
 
     return (
         <>
@@ -62,8 +63,13 @@ const UsersList = () => {
                     }
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    <Input placeholder="Search user" onChange={handleInputChange}
-                        onKeyDown={handleKeyDown} />
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex w-full items-center space-x-2">
+                            <Input placeholder="Search user" onChange={handleInputChange} />
+                            <Button type="submit">Search</Button>
+                        </div>
+                    </form>
+
                     <Sheet>
                         <Table>
                             <TableHeader>
