@@ -26,6 +26,7 @@ import {
 import { useState } from "react"
 import { useGetUsersQuery } from "@/store/userData/users"
 import { LoadingHeader, LoadingTableRow } from "./Loading"
+import UserDetails from "./UserDetails"
 
 
 const UsersList = () => {
@@ -33,7 +34,7 @@ const UsersList = () => {
     const [inputValue, setInputValue] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const { data: userData, error, isLoading } = useGetUsersQuery(searchValue);
-    const [userDetails, setUserDetails] = useState<number | null>(null);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,9 +81,9 @@ const UsersList = () => {
                                 }
                                 {userData?.users?.map((obj: any, i: number) => {
                                     return (
-                                        <SheetTrigger asChild>
+                                        <SheetTrigger key={`key-${i}`} asChild>
                                             <TableRow className="cursor-pointer"
-                                                onClick={() => setUserDetails(i)}
+                                                onClick={() => setSelectedIndex(i)}
                                             >
                                                 <TableCell>{obj?.firstName}</TableCell>
                                                 <TableCell>{obj?.lastName}</TableCell>
@@ -96,14 +97,7 @@ const UsersList = () => {
                             </TableBody>
                         </Table>
 
-                        <SheetContent>
-                            <SheetHeader>
-                                <SheetTitle>User Details</SheetTitle>
-                                <SheetDescription>
-                                    User details
-                                </SheetDescription>
-                            </SheetHeader>
-                        </SheetContent>
+                        <UserDetails users={userData?.users} index={selectedIndex} />
                     </Sheet>
                 </CardContent>
             </Card>
