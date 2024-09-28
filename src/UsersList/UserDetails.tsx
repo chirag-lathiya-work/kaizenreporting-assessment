@@ -15,7 +15,13 @@ type UserDetailsProps = {
     index: null | number
 }
 
-const UserDetails = ({ users, index }: UserDetailsProps) => {
+/**
+ * @param {UserDetailsProps} props The component accepts users & index
+ * @param {Users} props.users can be null or array of users
+ * @param {null | number} props.index if user didn't selected any user it will be null else index number
+ * @returns {null | JSX.Element}
+ */
+const UserDetails = ({ users, index }: UserDetailsProps): null | JSX.Element => {
 
     if (users === null)
         return null

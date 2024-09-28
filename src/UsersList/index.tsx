@@ -36,16 +36,18 @@ const UsersList = () => {
     const { data: userData, error, isLoading } = searchValue ? useSearchUsersQuery(searchValue) : useGetUsersQuery("api");
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-
+    //  Handle input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
 
+    //  Handle search submit
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
         setSearchValue(inputValue);
     }
 
+    //  If any error occur while fetching users
     if (error)
         return <h1>Something went wrong</h1>
 
