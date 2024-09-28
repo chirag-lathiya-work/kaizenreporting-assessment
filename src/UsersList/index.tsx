@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card"
 import { useState } from "react"
 import { useGetUsersQuery } from "@/store/userData/users"
+import { LoadingHeader, LoadingTableRow } from "./Loading"
 
 
 const UsersList = () => {
@@ -50,8 +51,14 @@ const UsersList = () => {
         <>
             <Card className="w-100">
                 <CardHeader>
-                    <CardTitle>{userData?.users?.length}</CardTitle>
-                    <CardDescription>Total users found</CardDescription>
+                    {
+                        isLoading
+                            ? <LoadingHeader />
+                            : <>
+                                <CardTitle>{userData?.users?.length}</CardTitle>
+                                <CardDescription>Total users found</CardDescription>
+                            </>
+                    }
                 </CardHeader>
                 <CardContent className="grid gap-4">
                     <Input placeholder="Search user" onChange={handleInputChange}
@@ -68,6 +75,9 @@ const UsersList = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
+                                {
+                                    isLoading && <LoadingTableRow />
+                                }
                                 {userData?.users?.map((obj: any, i: number) => {
                                     return (
                                         <SheetTrigger asChild>
